@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #0CC0DF; /* Background color */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40%;
+            max-width: 800px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow */
+            padding: 20px;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 5px solid #0CC0DF; /* Outer blue border color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .qa-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .question {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .answer {
+            font-size: 1.2em;
+            color: #555;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="quizImage" src="https://i.imgur.com/STQJLCC.png" alt="Quiz Image">
+        <div class="qa-box">
+            <div id="question" class="question">Click the image to get a question!</div>
+            <div id="answer" class="answer"></div>
+        </div>
+    </div>
+    
+    <script>
+        const questionsAndAnswers = [
+            { question: "Which superhero movie features the line 'I am Iron Man'?", answer: "Iron Man" },
+            { question: "What is the name of the superhero team in 'The Avengers'?", answer: "The Avengers" },
+            { question: "Which superhero is known as the 'Dark Knight'?", answer: "Batman" },
+            { question: "In which movie did Spider-Man first appear in the Marvel Cinematic Universe?", answer: "Captain America: Civil War" },
+            { question: "What is the name of Thor's hammer?", answer: "Mjolnir" },
+            { question: "Which superhero movie is set in Wakanda?", answer: "Black Panther" },
+            { question: "Who plays Deadpool in the 'Deadpool' movies?", answer: "Ryan Reynolds" },
+            { question: "Which superhero is known for his shield and his alter ego Steve Rogers?", answer: "Captain America" },
+            { question: "What is the real name of the superhero known as Black Widow?", answer: "Natasha Romanoff" },
+            { question: "Which superhero movie features a character called Doctor Strange?", answer: "Doctor Strange" },
+            { question: "What is the name of the alien race that invades Earth in 'The Avengers'?", answer: "Chitauri" },
+            { question: "Which superhero has the alter ego of Tony Stark?", answer: "Iron Man" },
+            { question: "In which movie does Bruce Banner transform into the Hulk?", answer: "The Incredible Hulk" },
+            { question: "Which superhero is known for his web-slinging abilities?", answer: "Spider-Man" },
+            { question: "What is the name of the character played by Gal Gadot in the DC Extended Universe?", answer: "Wonder Woman" },
+            { question: "Which movie features a superhero named 'Ant-Man'?", answer: "Ant-Man" },
+            { question: "Who is the villain in 'Black Panther'?", answer: "Killmonger" },
+            { question: "Which superhero is played by Hugh Jackman?", answer: "Wolverine" },
+            { question: "What is the name of the superhero movie that features the character 'Aquaman'?", answer: "Aquaman" },
+            { question: "Which superhero movie is set in the city of Gotham?", answer: "Batman" },
+            { question: "Who directed the movie 'Guardians of the Galaxy'?", answer: "James Gunn" },
+            { question: "In which movie does the character of Loki first appear?", answer: "Thor" },
+            { question: "What is the name of the superhero team that includes Iron Man, Thor, and Captain America?", answer: "The Avengers" },
+            { question: "Which superhero is known for his super-speed abilities?", answer: "The Flash" },
+            { question: "What is the name of the antagonist in 'Wonder Woman'?", answer: "Ares" },
+            { question: "Which superhero has the ability to shrink in size?", answer: "Ant-Man" },
+            { question: "Which superhero film features a character named 'Star-Lord'?", answer: "Guardians of the Galaxy" },
+            { question: "Who plays the role of the superhero 'Black Panther'?", answer: "Chadwick Boseman" },
+            { question: "Which superhero movie features the character 'Doctor Strange'?", answer: "Doctor Strange" },
+            { question: "What is the name of Thor's mischievous brother?", answer: "Loki" },
+            { question: "Which superhero movie involves a character called 'The Winter Soldier'?", answer: "Captain America: The Winter Soldier" },
+            { question: "Who plays the superhero 'Spider-Man' in the MCU?", answer: "Tom Holland" },
+            { question: "What is the name of the movie that brings together the superheroes from 'The Avengers' and 'Guardians of the Galaxy'?", answer: "Avengers: Infinity War" },
+            { question: "Which movie features a character known as 'Rocket Raccoon'?", answer: "Guardians of the Galaxy" },
+            { question: "Which superhero is known for his high-tech suit and his billionaire status?", answer: "Iron Man" },
+            { question: "Who is the main villain in 'Avengers: Endgame'?", answer: "Thanos" },
+            { question: "Which superhero has a sidekick named Robin?", answer: "Batman" },
+            { question: "What is the name of the superhero played by Brie Larson?", answer: "Captain Marvel" },
+            { question: "In which movie does the character 'Ego the Living Planet' appear?", answer: "Guardians of the Galaxy Vol. 2" },
+            { question: "Which superhero is known for his superhuman strength and invulnerability?", answer: "Superman" },
+            { question: "What is the name of the superhero team that includes Cyclops, Wolverine, and Storm?", answer: "The X-Men" },
+            { question: "Which superhero movie features the character 'Shazam'?", answer: "Shazam!" },
+            { question: "What is the name of the superhero who is a blind lawyer by day and a crimefighter by night?", answer: "Daredevil" },
+            { question: "Which movie features the superhero character 'Vision'?", answer: "Avengers: Age of Ultron" },
+            { question: "What is the name of the superhero movie that features 'Wade Wilson'?", answer: "Deadpool" },
+            { question: "Who plays the superhero 'Hawkeye'?", answer: "Jeremy Renner" },
+            { question: "Which superhero movie features a character named 'Mantis'?", answer: "Guardians of the Galaxy Vol. 2" },
+            { question: "Which superhero is known for his 'power ring'?", answer: "Green Lantern" },
+            { question: "In which movie does the superhero 'Black Widow' first appear?", answer: "Iron Man 2" },
+            { question: "Which superhero movie features the character 'Hela'?", answer: "Thor: Ragnarok" },
+            { question: "Who plays the role of 'Groot' in the 'Guardians of the Galaxy' movies?", answer: "Vin Diesel" },
+            { question: "Which superhero has a secret identity as Clark Kent?", answer: "Superman" },
+            { question: "What is the name of the superhero team that includes characters like 'Cyclops' and 'Jean Grey'?", answer: "The X-Men" },
+            { question: "Who is the superhero known for the catchphrase 'With great power comes great responsibility'?", answer: "Spider-Man" },
+            { question: "Which superhero movie features the character 'Black Bolt'?", answer: "Inhumans" },
+            { question: "What is the name of the superhero known for his 'power suit' and 'genius intellect'?", answer: "Iron Man" },
+            { question: "Which movie features the superhero 'The Flash'?", answer: "Justice League" },
+            { question: "Which superhero film showcases a character named 'Mera'?", answer: "Aquaman" },
+            { question: "Who plays the role of 'Wonder Woman'?", answer: "Gal Gadot" },
+            { question: "Which superhero movie features the character 'Ant-Man'?", answer: "Ant-Man" },
+            { question: "What is the name of the superhero team led by Captain America?", answer: "The Avengers" },
+            { question: "Which superhero is known for his 'super-hearing' abilities?", answer: "Daredevil" },
+            { question: "Who is the main antagonist in 'The Dark Knight'?", answer: "The Joker" },
+            { question: "Which movie features the superhero character 'Shuri'?", answer: "Black Panther" },
+            { question: "What is the name of the superhero team that includes 'Storm' and 'Wolverine'?", answer: "The X-Men" },
+            { question: "Which superhero movie features a character named 'Sentry'?", answer: "Sentry" },
+            { question: "Who is the superhero known for his 'super-speed' abilities and his alter ego Barry Allen?", answer: "The Flash" },
+            { question: "What is the name of the superhero who is a member of 'The Justice League' and known for his 'super-breath'?", answer: "Superman" },
+            { question: "Which superhero movie features the character 'Vulture'?", answer: "Spider-Man: Homecoming" },
+            { question: "Who plays the role of 'Doctor Strange'?", answer: "Benedict Cumberbatch" },
+            { question: "Which movie features the superhero character 'Falcon'?", answer: "Captain America: The Winter Soldier" },
+            { question: "What is the name of the superhero team that includes 'Gambit' and 'Rogue'?", answer: "The X-Men" },
+            { question: "Which superhero movie features the character 'Jessica Jones'?", answer: "Jessica Jones" },
+            { question: "Who plays the superhero 'Hawkeye' in the Marvel Cinematic Universe?", answer: "Jeremy Renner" },
+            { question: "Which movie features a superhero character named 'Cyborg'?", answer: "Justice League" },
+            { question: "What is the name of the superhero movie featuring the character 'Wade Wilson'?", answer: "Deadpool" },
+            { question: "Which superhero is known for his 'heat vision'?", answer: "Superman" },
+            { question: "What is the name of the superhero team that includes 'Black Widow' and 'Iron Man'?", answer: "The Avengers" },
+            { question: "Which superhero movie features a character called 'Ghost Rider'?", answer: "Ghost Rider" },
+            { question: "Who plays the superhero 'The Punisher'?", answer: "Jon Bernthal" },
+            { question: "Which movie features the superhero character 'Bane'?", answer: "The Dark Knight Rises" },
+            { question: "What is the name of the superhero movie featuring 'Jesse Custer'?", answer: "Preacher" },
+            { question: "Who is the superhero known for his 'superhuman agility' and alter ego Peter Parker?", answer: "Spider-Man" },
+            { question: "Which superhero movie features the character 'Korg'?", answer: "Thor: Ragnarok" },
+            { question: "What is the name of the superhero team that includes 'The Vision' and 'Scarlet Witch'?", answer: "The Avengers" },
+            { question: "Which movie features a superhero character called 'Rorschach'?", answer: "Watchmen" },
+            { question: "Who plays the superhero 'Green Lantern'?", answer: "Ryan Reynolds" },
+            { question: "Which superhero movie features the character 'Professor X'?", answer: "X-Men" },
+            { question: "What is the name of the superhero who is a member of 'The Justice League' and known for his 'speed'?", answer: "The Flash" },
+            { question: "Which movie features the superhero character 'Shazam'?", answer: "Shazam!" },
+            { question: "Who is the superhero known for his 'powerful roar' and alter ego Bruce Banner?", answer: "The Hulk" },
+            { question: "Which superhero movie features the character 'Mysterio'?", answer: "Spider-Man: Far From Home" },
+            { question: "What is the name of the superhero team that includes 'Nightcrawler' and 'Colossus'?", answer: "The X-Men" },
+            { question: "Which movie features a superhero character named 'The Atom'?", answer: "Arrow" },
+            { question: "Who plays the superhero 'Aquaman'?", answer: "Jason Momoa" }
+        ];
+
+        document.getElementById('quizImage').addEventListener('click', function() {
+            const randomIndex = Math.floor(Math.random() * questionsAndAnswers.length);
+            const question = questionsAndAnswers[randomIndex].question;
+            const answer = questionsAndAnswers[randomIndex].answer;
+
+            document.getElementById('question').textContent = question;
+            document.getElementById('answer').textContent = answer;
+        });
+    </script>
+</body>
+</html>
